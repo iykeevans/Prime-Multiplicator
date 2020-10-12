@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prime Multiplicator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        color: #525252;
+      }
+
+      .wrapper {
+        height: 100vh;
+        width: 100%;
+      }
+
+      .input-area {
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+      }
+
+      .input {
+        height: 36px;
+        margin-bottom: 1rem;
+        padding: 0 1rem;
+        border: 2px solid #ccc;
+        background: #eee;
+        border-radius: 3px;
+      }
+
+      .button {
+        height: 36px;
+        border-style: none;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .flex__col {
+        flex-direction: column;
+      }
+
+      .justify-center {
+        justify-content: center;
+      }
+
+      .items-center {
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div
+        class="wrapper flex flex__col justify-center items-center"
+        v-if="!isCalculating"
+      >
+        <h1 style="margin-bottom: 20px">PRIME CALCULATOR</h1>
+        <div
+          style="
+            width: 100%;
+            max-width: 400px;
+            background-color: #eee;
+            padding: 20px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+          "
+        >
+          <h3>How it works?</h3>
+          <small>
+            In a multiplication table we have two sides the top row and the side
+            columns X Axis respresents the top row while Y Axis represents the
+            side columns.
+          </small>
+        </div>
+        <div class="input-area flex flex__col">
+          <label class="flex flex__col">
+            X Axis
+            <input type="text" class="input" v-model="input.x[1]" />
+          </label>
+
+          <label class="flex flex__col">
+            Y Axis
+            <input type="text" class="input" v-model="input.y[1]" />
+          </label>
+          <button class="button" @click="solution(input)">Generate</button>
+        </div>
+      </div>
+
+      <div v-else>
+        <table style="width: 100%">
+          <thead>
+            <td>x</td>
+            <td
+              v-for="(num, i) in primeValues.x"
+              :key="i"
+              :style="`background-color: #eee; width: ${Math.floor(100/primeValues.x.length)}%`"
+            >
+              {{num}}
+            </td>
+          </thead>
+
+          <tr v-for="(num, i) in primeValues.y" :key="i">
+            <td style="background-color: #eee">{{num}}</td>
+            <td
+              style="background-color: #eee"
+              v-for="(m, i) in primeValues.x"
+              :key="i"
+            >
+              {{num * m}}
+            </td>
+          </tr>
+        </table>
+
+        <button
+          class="button"
+          style="padding: 0 2rem; margin-top: 3rem"
+          @click="isCalculating = false"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            input: {
+              x: [0, 40],
+              y: [0, 20],
+            },
+            isCalculating: false,
+            primeValues: { x: [], y: [] },
+          };
+        },
+        methods: {
+          isPrime(num) {
+            for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
+              if (num % i === 0) return false;
+            }
+
+            return num > 1;
+          },
+
+          solution(ranges = { x: [], y: [] }) {
+            this.isCalculating = true;
+            const primeValues = {};
+
+            for (const [axis, range] of Object.entries(ranges)) {
+              primeValues[axis] = Array.from(
+                { length: range[1] + 1 },
+                (_, i) => i + range[0]
+              ).filter(this.isPrime);
+            }
+
+            // return primeValues;
+            console.log(primeValues);
+            this.primeValues = primeValues;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
