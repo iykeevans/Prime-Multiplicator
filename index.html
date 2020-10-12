@@ -88,12 +88,12 @@
         <div class="input-area flex flex__col">
           <label class="flex flex__col">
             X Axis
-            <input type="text" class="input" v-model="input.x[1]" />
+            <input type="text" class="input" v-model.number="input.x[1]" />
           </label>
 
           <label class="flex flex__col">
             Y Axis
-            <input type="text" class="input" v-model="input.y[1]" />
+            <input type="text" class="input" v-model.number="input.y[1]" />
           </label>
           <button class="button" @click="solution(input)">Generate</button>
         </div>
@@ -113,9 +113,9 @@
           </thead>
 
           <tr v-for="(num, i) in primeValues.y" :key="i">
-            <td style="background-color: #eee">{{num}}</td>
+            <td :style="`background-color: #eee; width: 10%;`">{{num}}</td>
             <td
-              style="background-color: #eee"
+              :style="`background-color: #eee; width: ${Math.floor(100/primeValues.x.length)}%`"
               v-for="(m, i) in primeValues.x"
               :key="i"
             >
@@ -127,7 +127,7 @@
         <button
           class="button"
           style="padding: 0 2rem; margin-top: 3rem"
-          @click="isCalculating = false"
+          @click="reset"
         >
           Reset
         </button>
@@ -142,8 +142,8 @@
         data() {
           return {
             input: {
-              x: [0, 40],
-              y: [0, 20],
+              x: [0, 5],
+              y: [0, 5],
             },
             isCalculating: false,
             primeValues: { x: [], y: [] },
@@ -172,6 +172,10 @@
             // return primeValues;
             console.log(primeValues);
             this.primeValues = primeValues;
+          },
+          reset() {
+            this.isCalculating = false;
+            this.primeValues = { x: [], y: [] };
           },
         },
       });
